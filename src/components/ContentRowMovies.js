@@ -1,42 +1,59 @@
-import React from 'react';
+import React, {Component} from 'react';
 import SmallCard from './SmallCard';
 
-let productsInDataBase = {
-    color:   "primary",
-    titulo: "Productos en Base de Datos",
-    valor: 21,
-    icono: "fas fa-mountain",
-}
+// declaro componente de clase
 
-let usersInDB ={
-    color:   "success",
-    titulo: "usuarios registrados",
-    valor: 79,
-    icono: "fas fa-hiking",
-}
+class ContentRowMovies extends Component{
+    constructor(){
+        super()
+        this.state ={
+            tarjetas : []
+        }
+    }
+    // Declaro estado inicial
+    componentDidMount(){
+        Promise.all([
+            fetch('http://localhost:3002/api/products').then(res => res.json()),
+            fetch('http://localhost:3002/api/users').then(res => res.json())
+        ]).then((promisesData) => {
+            let tarjetaProducts = {
+                color:   "primary",
+                titulo: "Productos en Base de Datos",
+                valor: promisesData[0].meta.count,
+                icono: "fas fa-mountain",};
 
-let categories = {
-    color:   "warning",
-    titulo: "Categorias totales",
-    valor: 49,
-    icono: "fas fa-bookmark",
-}
+            let tarjetaUsers = {
+                color:   "success",
+                titulo: "usuarios registrados",
+                valor: promisesData[1].meta.count,
+                icono: "fas fa-hiking",
+            };
+            let categoriesData = {
+                color:   "warning",
+                titulo: "Categorias totales",
+                valor: promisesData[0].meta.categoriesCount,
+                icono: "fas fa-bookmark",
+            };
 
-let cardProps = [productsInDataBase,usersInDB,categories];
+            this.setState({
+                tarjetas: [tarjetaProducts, tarjetaUsers, categoriesData]
+            });
+        })
 
-
-function ContentRowTop(){
-    return (
-        <React.Fragment>
-        {/*<!-- Content Row -->*/}
-        <div className="row">
+    }
+    render(){
+        return (
+            <React.Fragment>
+            {/*<!-- Content Row -->*/}
+                <div className="row">
             {
-                cardProps.map((producto,index)=>{
-                    return <SmallCard  {...producto}  key= {index}/>
+                this.state.tarjetas.map((tarjeta,index)=>{
+                    return <SmallCard  {...tarjeta}  key= {index}/>
                 })
             }      
         </div>
-        </React.Fragment>
-    )
+            </React.Fragment>
+    )}
 }
-export default ContentRowTop;
+
+export default ContentRowMovies;
