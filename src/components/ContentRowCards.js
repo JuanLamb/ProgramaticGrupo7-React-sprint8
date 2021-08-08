@@ -3,7 +3,7 @@ import SmallCard from './SmallCard';
 
 // declaro componente de clase
 
-class ContentRowMovies extends Component{
+class ContentRowCards extends Component{
     constructor(){
         super()
         this.state ={
@@ -56,4 +56,4 @@ class ContentRowMovies extends Component{
     )}
 }
 
-export default ContentRowMovies;
+export default ContentRowCards;
